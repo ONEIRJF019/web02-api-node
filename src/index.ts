@@ -1,7 +1,8 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import { AppDataSource } from './data-source'
-import login from './controllers/login'
+import authController from './controllers/authController'
+import situationsController from './controllers/situationsController'
 
 dotenv.config()
 
@@ -9,7 +10,10 @@ const app = express()
 
 const port = process.env.PORT || 8080
 
-app.use('/login', login)
+app.use(express.json())
+
+app.use('/login', authController)
+app.use('/situations', situationsController)
 
 AppDataSource.initialize()
   .then(() => {
