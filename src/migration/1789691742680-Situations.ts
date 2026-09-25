@@ -16,6 +16,7 @@ export class Situations1789691742680 implements MigrationInterface {
           {
             name: 'name_situation',
             type: 'varchar',
+            isUnique: true,
           },
           {
             name: 'created_at',
