@@ -4,8 +4,15 @@ import { Situations } from '../entity/Situations'
 
 const router = express.Router()
 
-router.get('/', (req: Request, res: Response) => {
-  res.send('Tela de situações da rota.')
+router.get('/', async (req: Request, res: Response) => {
+  try {
+    const situationRepository = AppDataSource.getRepository(Situations)
+    const situations = await situationRepository.find()
+
+    return res.status(200).json(situations)
+  } catch (error) {
+    return res.status(500).json({ message: 'Erro ao listar situação', error })
+  }
 })
 
 router.post('/', async (req: Request, res: Response) => {
@@ -19,6 +26,23 @@ router.post('/', async (req: Request, res: Response) => {
     res.status(201).json({ message: 'Situação cadastrada com sucesso', situation: newSituation })
   } catch (error) {
     res.status(500).json({ message: 'Erro ao cadastrar situação', error })
+  }
+})
+
+router.get('/:id', async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params
+    const situationRepository = AppDataSource.getRepository(Situations)
+
+    const situation = await situationRepository.findOneBy({ id: parseInt(id as string) })
+
+    if (!situation) {
+      return res.status(404).json({ message: 'Situação não encontrada' })
+    }
+
+    return res.status(200).json(situation)
+  } catch (error) {
+    return res.status(500).json({ message: 'Erro ao listar situação', error })
   }
 })
 
